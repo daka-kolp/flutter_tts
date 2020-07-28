@@ -324,18 +324,18 @@ public class FlutterTtsPlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   void getLanguages(Result result) {
-    ArrayList<String> locales = new ArrayList<>();
+    Map<String, String> locales = new HashMap<String, String>();
     try {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         // While this method was introduced in API level 21, it seems that it
         // has not been implemented in the speech service side until API Level 23.
         for (Locale locale : tts.getAvailableLanguages()) {
-          locales.add(locale.toLanguageTag());
+          locales.put(locale.toLanguageTag(), locale.getLanguage());
         }
       } else {
         for (Locale locale : Locale.getAvailableLocales()) {
           if (locale.getVariant().isEmpty() && isLanguageAvailable(locale)) {
-            locales.add(locale.toLanguageTag());
+            locales.put(locale.toLanguageTag(), locale.getLanguage());
           }
         }
       }
