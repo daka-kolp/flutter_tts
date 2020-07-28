@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.UUID;
 
@@ -324,18 +325,18 @@ public class FlutterTtsPlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   void getLanguages(Result result) {
-    Map<String, String> locales = new HashMap<String, String>();
+    Map<String, String> locales = new HashMap<>();
     try {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         // While this method was introduced in API level 21, it seems that it
         // has not been implemented in the speech service side until API Level 23.
         for (Locale locale : tts.getAvailableLanguages()) {
-          locales.put(locale.toLanguageTag(), locale.getLanguage());
+          locales.put(locale.toLanguageTag(), locale.getDisplayLanguage() + " (" + locale.getDisplayCountry() + ")");
         }
       } else {
         for (Locale locale : Locale.getAvailableLocales()) {
           if (locale.getVariant().isEmpty() && isLanguageAvailable(locale)) {
-            locales.put(locale.toLanguageTag(), locale.getLanguage());
+            locales.put(locale.toLanguageTag(), locale.getDisplayLanguage() + " (" + locale.getDisplayCountry() + ")");
           }
         }
       }
