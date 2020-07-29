@@ -331,12 +331,14 @@ public class FlutterTtsPlugin implements MethodCallHandler, FlutterPlugin {
         // While this method was introduced in API level 21, it seems that it
         // has not been implemented in the speech service side until API Level 23.
         for (Locale locale : tts.getAvailableLanguages()) {
-          locales.put(locale.toLanguageTag(), locale.getDisplayLanguage() + " (" + locale.getDisplayCountry() + ")");
+          String country = getCountryText(locale.getDisplayCountry());
+          locales.put(locale.toLanguageTag(), locale.getDisplayLanguage() + country);
         }
       } else {
         for (Locale locale : Locale.getAvailableLocales()) {
           if (locale.getVariant().isEmpty() && isLanguageAvailable(locale)) {
-            locales.put(locale.toLanguageTag(), locale.getDisplayLanguage() + " (" + locale.getDisplayCountry() + ")");
+            String country = getCountryText(locale.getDisplayCountry());
+            locales.put(locale.toLanguageTag(), locale.getDisplayLanguage() + country);
           }
         }
       }
@@ -344,6 +346,10 @@ public class FlutterTtsPlugin implements MethodCallHandler, FlutterPlugin {
       Log.d(tag, "getLanguages: " + e.getMessage());
     }
     result.success(locales);
+  }
+
+  private String getCountryText (String country) {
+    return country != null && country.trim().isEmpty() ? "" : " (" + country + ")";
   }
 
   void getEngines(Result result) {
